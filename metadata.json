@@ -1,0 +1,7 @@
+{
+  "name": "AICTE Security Deposit & FDR Portal",
+  "description": "Enterprise lifecycle management portal for AICTE Regulation Bureau to digitally verify, monitor, renew, and release Security Deposits and Fixed Deposit Receipts (PS 26265).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

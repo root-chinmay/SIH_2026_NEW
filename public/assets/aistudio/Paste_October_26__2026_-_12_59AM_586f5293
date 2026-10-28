@@ -1,0 +1,2033 @@
+# BUILD AN END-TO-END AICTE SECURITY DEPOSIT / FDR MANAGEMENT PORTAL
+
+## 1. PROJECT CONTEXT
+
+Build a complete, production-quality full-stack web application based on the Smart India Hackathon 2026 Problem Statement:
+
+**PS ID:** 26265  
+**PS Title:** Streamline of Security Deposit / FDR Portal
+
+The application is intended for the **AICTE Regulation Bureau and other authorized stakeholders** to digitally manage Security Deposits and Fixed Deposit Receipts (FDRs) submitted by technical institutions.
+
+The application must be a **fully functional end-to-end product**, not a static UI prototype.
+
+Every major button, form, filter, search field, workflow, notification, upload function, dashboard statistic, approval action, status change, report and audit feature must actually work.
+
+Do not create fake navigation where buttons do nothing.
+
+The final website should look like a serious government/regulatory enterprise application: professional, clean, secure, accessible, responsive and easy to use.
+
+---
+
+# 2. CORE PROBLEM TO SOLVE
+
+AICTE needs to manage a large number of Security Deposits and FDRs submitted by institutions.
+
+The current problem is that information can become fragmented across manual records, correspondence, documents and different tracking mechanisms.
+
+This makes it difficult to:
+
+- Maintain accurate institution-wise FDR records
+- Store and retrieve FDR documents
+- Verify submitted information
+- Detect discrepancies
+- Track maturity and validity dates
+- Monitor renewals and replacements
+- Track release/refund requests
+- Identify pending cases
+- Notify stakeholders before deadlines
+- Maintain complete historical records
+- Maintain accountability through audit trails
+
+Build one centralized portal that manages the **complete lifecycle of an FDR/security deposit**.
+
+---
+
+# 3. MAIN OBJECTIVE
+
+Create a centralized:
+
+**AICTE Security Deposit / FDR Lifecycle Management Portal**
+
+that supports:
+
+Institution Registration/Management
+→ FDR Submission
+→ Document Upload
+→ Scrutiny
+→ Verification
+→ Approval/Rejection
+→ Active Monitoring
+→ Expiry/Maturity Alerts
+→ Renewal/Replacement
+→ Release/Refund
+→ Complete Audit History
+
+The system should provide a single source of truth for authorized users.
+
+---
+
+# 4. IMPORTANT PRODUCT PRINCIPLE
+
+Do NOT build only a dashboard.
+
+Build the entire operational system behind the dashboard.
+
+Every workflow shown in the UI must have corresponding:
+
+- frontend functionality
+- backend API
+- database persistence
+- validation
+- authorization
+- status transitions
+- audit logging
+- error handling
+
+Use realistic seed/demo data so the complete application can be demonstrated immediately after installation.
+
+---
+
+# 5. USER ROLES
+
+Implement role-based access control.
+
+At minimum create these roles:
+
+## A. Institution User
+
+Can:
+
+- Login
+- View own institution
+- View own FDRs
+- Submit new FDR
+- Upload documents
+- View verification status
+- Respond to discrepancies
+- Submit renewal/replacement
+- Submit release/refund request
+- View notifications
+- View request history
+
+Cannot:
+
+- Access other institutions
+- Change verification results
+- Approve their own FDR
+- Modify AICTE verification records
+- Access administrative functions
+
+---
+
+## B. Scrutiny / AICTE Officer
+
+Can:
+
+- View assigned institutions
+- Search all permitted FDRs
+- Review submissions
+- View uploaded documents
+- Verify FDR information
+- Record scrutiny observations
+- Identify discrepancies
+- Request correction
+- Approve/reject where authorized
+- Monitor expiry/maturity
+- Process renewal/replacement workflows
+- Review release/refund requests
+- Generate reports
+- View audit trails
+
+---
+
+## C. Approving Authority
+
+Can:
+
+- Review cases requiring approval
+- Approve/reject FDR-related requests
+- Approve release/refund requests
+- Review officer recommendations
+- View complete case history
+- View audit trail
+
+---
+
+## D. Administrator
+
+Can:
+
+- Manage users
+- Manage roles
+- Manage institutions
+- Configure notification rules
+- Configure system settings
+- Manage status/configuration values
+- View system-wide audit logs
+- Manage authorized integrations
+- Monitor system health
+
+---
+
+## E. Auditor / Read-only User
+
+Can:
+
+- Search records
+- View documents where permitted
+- View status history
+- View audit logs
+- Generate reports
+
+Cannot modify records.
+
+---
+
+# 6. AUTHENTICATION AND AUTHORIZATION
+
+Implement secure authentication.
+
+Include:
+
+- Login
+- Logout
+- Password hashing
+- Session/token management
+- Role-based authorization
+- Protected routes
+- Account status
+- Password reset/change functionality
+- Session expiration
+- Unauthorized access handling
+
+For the prototype, provide seeded demo accounts for every role.
+
+Clearly display the current logged-in role in the UI.
+
+Never rely only on frontend role restrictions. Enforce authorization on the backend/API.
+
+---
+
+# 7. MAIN APPLICATION STRUCTURE
+
+Create the following major sections:
+
+1. Login
+2. Dashboard
+3. Institutions
+4. FDR Repository
+5. FDR Submission
+6. Verification/Scrutiny
+7. Discrepancies
+8. Expiry & Maturity Monitoring
+9. Renewal / Replacement
+10. Release / Refund
+11. Notifications
+12. Reports
+13. Audit Trail
+14. Users & Roles
+15. Settings
+16. Profile
+
+The sidebar/navigation should change according to the user's role.
+
+---
+
+# 8. DESIGN / UI REQUIREMENTS
+
+The UI must look like a modern professional government/enterprise portal.
+
+Avoid:
+
+- flashy gradients
+- excessive animations
+- gaming-style UI
+- unnecessary illustrations
+- neon colors
+- informal language
+- oversized typography
+- cluttered layouts
+
+Use:
+
+- formal typography
+- professional spacing
+- clean cards
+- structured tables
+- clear status badges
+- restrained colors
+- accessible contrast
+- professional icons
+- consistent component design
+
+Recommended visual direction:
+
+- Primary: dark navy / deep blue
+- Secondary: slate / grey
+- Success: restrained green
+- Warning: amber
+- Error: red
+- Background: white/light grey
+
+Use a formal modern font such as:
+
+**Inter, Source Sans 3, or IBM Plex Sans**
+
+Use a consistent design system throughout the application.
+
+---
+
+# 9. RESPONSIVE DESIGN
+
+The website must work properly on:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+Desktop should be the primary experience because this is an administrative enterprise portal.
+
+Tables must remain usable on smaller screens through:
+
+- responsive layouts
+- horizontal scrolling
+- column prioritization
+- responsive cards
+
+---
+
+# 10. DASHBOARD
+
+Create a powerful role-specific dashboard.
+
+## AICTE Dashboard
+
+Display cards such as:
+
+- Total Institutions
+- Total FDRs
+- Active FDRs
+- Pending Verification
+- Expiring Soon
+- Matured
+- Renewal Required
+- Replacement Pending
+- Release/Refund Requests
+- Discrepancies
+- Overdue Cases
+
+Add charts for:
+
+- FDR status distribution
+- Upcoming maturities
+- FDRs by institution/state
+- Verification status
+- Monthly submissions
+- Renewal trends
+- Pending cases
+- Release/refund status
+
+Include an "Action Required" section.
+
+Example:
+
+```text
+ACTION REQUIRED
+
+12 FDRs expire within 30 days
+7 verification requests pending
+4 renewal submissions require scrutiny
+3 discrepancies unresolved
+5 release requests awaiting approval
+```
+
+Every dashboard item should be clickable and lead to the corresponding filtered records.
+
+---
+
+# 11. INSTITUTION MANAGEMENT
+
+Create an institution directory.
+
+Each institution should have:
+
+- Institution ID
+- Institution Name
+- Institution Type
+- Address
+- State
+- City
+- Contact information
+- Authorized representative
+- Approval-related information
+- Number of FDRs
+- Active FDRs
+- Expiring FDRs
+- Pending requests
+- Institution status
+
+Provide:
+
+- Search
+- Filters
+- Sorting
+- Pagination
+- Institution details page
+
+Institution detail page should show:
+
+### Overview
+
+### FDRs
+
+### Documents
+
+### Verification history
+
+### Renewal history
+
+### Release/refund requests
+
+### Notifications
+
+### Audit history
+
+---
+
+# 12. FDR REPOSITORY
+
+Create a central searchable FDR repository.
+
+Every FDR record must contain, where applicable:
+
+- Internal FDR ID
+- Institution ID
+- Institution name
+- FDR number
+- Bank name
+- Branch
+- IFSC where applicable
+- Instrument type
+- Deposit amount
+- Currency
+- Issue date
+- Maturity date
+- Validity date
+- Submission date
+- Verification date
+- Current status
+- Verification status
+- Renewal status
+- Replacement status
+- Document reference
+- Remarks
+- Created by
+- Updated by
+- Created timestamp
+- Updated timestamp
+
+Allow search by:
+
+- FDR number
+- Institution
+- Bank
+- Institution ID
+- Status
+
+Allow filters by:
+
+- Active
+- Pending verification
+- Expiring soon
+- Matured
+- Renewal required
+- Replacement required
+- Released
+- Rejected
+- Discrepancy
+- Pending action
+
+---
+
+# 13. FDR SUBMISSION WORKFLOW
+
+Create a multi-step FDR submission form.
+
+### Step 1 — Institution
+
+Select institution.
+
+### Step 2 — FDR Details
+
+Fields:
+
+- FDR number
+- Bank
+- Branch
+- Amount
+- Issue date
+- Maturity date
+- Validity
+- Instrument type
+
+### Step 3 — Document Upload
+
+Allow upload of:
+
+- FDR document
+- Deposit confirmation
+- Supporting documents
+
+### Step 4 — Review
+
+Show a complete summary.
+
+### Step 5 — Submit
+
+On submission:
+
+Status becomes:
+
+**PENDING VERIFICATION**
+
+Create an audit event.
+
+Notify relevant AICTE officer.
+
+---
+
+# 14. DOCUMENT MANAGEMENT
+
+Implement secure document upload.
+
+Support common formats such as:
+
+- PDF
+- JPG/JPEG
+- PNG
+
+Apply:
+
+- file type validation
+- file size validation
+- safe file naming
+- malware/security scanning hook where available
+- access control
+- metadata storage
+
+Do not expose private documents through publicly guessable URLs.
+
+Documents must only be accessible to authorized users.
+
+For each document store:
+
+- document ID
+- document type
+- original filename
+- storage path/reference
+- upload date
+- uploader
+- version
+- document status
+
+Implement document versioning.
+
+Never silently overwrite important documents.
+
+---
+
+# 15. VERIFICATION MODULE
+
+Create a dedicated verification workspace.
+
+Show:
+
+## Institution Submitted Data
+
+versus
+
+## Independently Verified Data
+
+Example:
+
+```text
+FIELD              SUBMITTED          VERIFIED
+
+FDR Number         FDR12345           FDR12345
+Bank               ABC Bank           ABC Bank
+Amount             ₹10,00,000         ₹10,00,000
+Issue Date         01/01/2026         01/01/2026
+Maturity Date      01/01/2027         01/01/2027
+```
+
+Use visual indicators:
+
+✓ Match
+
+⚠ Mismatch
+
+— Not verified
+
+Provide actions:
+
+- Verify
+- Reject
+- Request Correction
+- Add Observation
+- Mark Discrepancy
+- Approve
+
+Do not allow an institution user to mark its own FDR as verified.
+
+---
+
+# 16. BANK VERIFICATION INTEGRATION
+
+The problem statement allows integration with legitimate bank verification mechanisms where technically feasible and formally authorized.
+
+For the prototype:
+
+Create an abstraction layer for an external verification service.
+
+Implement a mock verification provider so the system can demonstrate:
+
+```text
+FDR Number
+Bank
+Amount
+Issue Date
+Maturity Date
+```
+
+being checked.
+
+Possible responses:
+
+```text
+VERIFIED
+NOT VERIFIED
+MISMATCH
+SERVICE UNAVAILABLE
+```
+
+Clearly label mock/demo verification as:
+
+**Prototype Verification Service**
+
+Do NOT claim that the prototype is connected to a real bank unless an actual authorized integration exists.
+
+Design the backend so a real authorized bank API can later replace the mock service without redesigning the entire application.
+
+---
+
+# 17. DISCREPANCY MANAGEMENT
+
+Automatically detect discrepancies where possible.
+
+Examples:
+
+- Amount mismatch
+- FDR number mismatch
+- Bank mismatch
+- Date mismatch
+- Missing document
+- Invalid document
+- Duplicate FDR
+- Expired FDR
+- Missing required field
+
+Each discrepancy should contain:
+
+- Discrepancy ID
+- FDR
+- Type
+- Severity
+- Description
+- Detected date
+- Detected by/system
+- Status
+- Assigned officer
+- Resolution
+- Resolved by
+- Resolution date
+
+Statuses:
+
+- Open
+- Under Review
+- Awaiting Institution
+- Resolved
+- Rejected/Closed
+
+---
+
+# 18. AUTOMATIC MATURITY AND VALIDITY MONITORING
+
+This is a core feature.
+
+The backend should calculate FDR lifecycle status based on dates and configured rules.
+
+Example statuses:
+
+```text
+ACTIVE
+EXPIRING_SOON
+MATURED
+OVERDUE
+RENEWAL_PENDING
+REPLACEMENT_PENDING
+RELEASED
+```
+
+Do not hard-code the reminder periods into the UI.
+
+Make them configurable in admin settings.
+
+Example configuration:
+
+```text
+Reminder 1: 60 days before maturity
+Reminder 2: 30 days before maturity
+Reminder 3: 15 days before maturity
+Escalation: after configured overdue period
+```
+
+---
+
+# 19. NOTIFICATION SYSTEM
+
+Create an in-app notification center.
+
+Notifications should be generated for:
+
+- New FDR submission
+- Verification required
+- Discrepancy detected
+- Document correction required
+- Upcoming maturity
+- Renewal required
+- Overdue FDR
+- Renewal submitted
+- Renewal approved/rejected
+- Release/refund request
+- Approval required
+- Request approved/rejected
+- Escalation
+
+Show:
+
+- notification title
+- message
+- date/time
+- severity
+- read/unread
+- related record
+
+Add:
+
+**Mark as Read**
+
+and
+
+**Mark All as Read**
+
+---
+
+# 20. RENEWAL WORKFLOW
+
+Create a complete renewal workflow.
+
+Example:
+
+```text
+ACTIVE
+   ↓
+EXPIRING SOON
+   ↓
+RENEWAL REQUIRED
+   ↓
+Institution submits renewed FDR
+   ↓
+Verification
+   ↓
+Approved
+   ↓
+Old FDR → REPLACED
+New FDR → ACTIVE
+```
+
+Never delete the old FDR.
+
+Maintain the relationship:
+
+```text
+Previous FDR
+      ↓
+Renewed By
+      ↓
+New FDR
+```
+
+Display the complete renewal chain.
+
+---
+
+# 21. RELEASE / REFUND WORKFLOW
+
+Create a workflow for release/refund requests.
+
+Institution submits:
+
+- FDR
+- request type
+- reason
+- supporting documents
+- remarks
+
+Workflow:
+
+```text
+SUBMITTED
+↓
+UNDER SCRUTINY
+↓
+DOCUMENT CHECK
+↓
+OFFICER RECOMMENDATION
+↓
+COMPETENT AUTHORITY APPROVAL
+↓
+APPROVED / REJECTED
+↓
+RELEASED
+```
+
+Require appropriate authorization for approval.
+
+Allow rejection with mandatory reason.
+
+Maintain complete history.
+
+---
+
+# 22. CASE TIMELINE
+
+Every FDR should have a timeline.
+
+Example:
+
+```text
+25 Oct 2026
+FDR Submitted
+
+25 Oct 2026
+Documents Uploaded
+
+26 Oct 2026
+Scrutiny Started
+
+27 Oct 2026
+Verification Completed
+
+27 Oct 2026
+FDR Approved
+
+01 Dec 2026
+Renewal Reminder Generated
+
+15 Dec 2026
+Renewal Submitted
+```
+
+This is important for transparency and auditability.
+
+---
+
+# 23. AUDIT TRAIL
+
+Implement an immutable-style audit log.
+
+Track:
+
+- Login
+- Logout
+- FDR creation
+- FDR update
+- Status changes
+- Document upload
+- Document replacement
+- Verification
+- Rejection
+- Approval
+- Renewal
+- Release/refund
+- User changes
+- Role changes
+- Configuration changes
+
+Each audit event should contain:
+
+- timestamp
+- user
+- role
+- action
+- entity
+- entity ID
+- previous value where appropriate
+- new value where appropriate
+- IP/device metadata where appropriate and legally permissible
+
+Audit logs must not be editable through the normal application UI.
+
+---
+
+# 24. SEARCH
+
+Implement global and contextual search.
+
+Search by:
+
+- Institution
+- Institution ID
+- FDR number
+- Bank
+- Request ID
+- Discrepancy ID
+
+Provide useful empty states.
+
+Example:
+
+```text
+No FDRs found.
+
+Try searching using:
+FDR number
+Institution name
+Institution ID
+Bank
+```
+
+---
+
+# 25. REPORTING
+
+Create a Reports section.
+
+Reports should include:
+
+### FDR Status Report
+
+### Expiring FDR Report
+
+### Matured FDR Report
+
+### Pending Verification Report
+
+### Discrepancy Report
+
+### Renewal Report
+
+### Release/Refund Report
+
+### Institution-wise FDR Report
+
+### Audit Report
+
+Allow:
+
+- filtering
+- date range
+- sorting
+- export CSV
+- export PDF where practical
+
+Reports should be generated from actual database data.
+
+---
+
+# 26. ADMIN SETTINGS
+
+Create an administration settings area.
+
+Allow authorized administrators to configure:
+
+- reminder periods
+- escalation periods
+- allowed file types
+- maximum file size
+- notification settings
+- status configuration
+- user roles
+- institution settings
+- system parameters
+
+Do not expose administrative settings to normal users.
+
+---
+
+# 27. DATABASE DESIGN
+
+Create a proper relational database.
+
+At minimum model entities similar to:
+
+```text
+users
+roles
+permissions
+institutions
+institution_users
+fdrs
+fdr_documents
+fdr_verifications
+fdr_discrepancies
+fdr_renewals
+release_requests
+notifications
+audit_logs
+workflow_actions
+system_settings
+```
+
+Use proper relationships and foreign keys.
+
+Use indexes for frequently searched fields such as:
+
+- FDR number
+- institution ID
+- status
+- maturity date
+- bank
+- created date
+
+Do not store everything in one giant table.
+
+---
+
+# 28. FDR STATUS STATE MACHINE
+
+Implement controlled status transitions.
+
+For example:
+
+```text
+DRAFT
+ ↓
+SUBMITTED
+ ↓
+PENDING_VERIFICATION
+ ↓
+UNDER_REVIEW
+ ↓
+VERIFIED
+ ↓
+ACTIVE
+ ↓
+EXPIRING_SOON
+ ↓
+RENEWAL_PENDING
+ ↓
+RENEWED
+ ↓
+REPLACED
+```
+
+Alternative lifecycle:
+
+```text
+ACTIVE
+ ↓
+MATURED
+ ↓
+RELEASE_REQUESTED
+ ↓
+APPROVED
+ ↓
+RELEASED
+```
+
+Rejected/correction states should be handled appropriately.
+
+Prevent invalid status transitions through backend validation.
+
+---
+
+# 29. SECURITY REQUIREMENTS
+
+Security is a major part of this project.
+
+Implement appropriate protections against:
+
+### Authentication attacks
+
+- brute-force protection
+- secure password hashing
+- session invalidation
+- rate limiting
+
+### Authorization issues
+
+Prevent:
+
+- IDOR
+- privilege escalation
+- unauthorized record access
+- unauthorized document access
+
+### Web vulnerabilities
+
+Protect against:
+
+- SQL injection
+- XSS
+- CSRF where applicable
+- insecure direct object references
+- malicious file uploads
+- path traversal
+- command injection
+- insecure deserialization
+
+### API security
+
+Implement:
+
+- authentication
+- authorization
+- input validation
+- rate limiting
+- safe error responses
+- server-side validation
+
+### Document security
+
+Never trust:
+
+- filename
+- MIME type
+- extension
+- client-side validation
+
+Validate uploads server-side.
+
+Store files outside publicly accessible directories where possible.
+
+Use generated internal identifiers.
+
+### Data protection
+
+Use encryption in transit through HTTPS-ready configuration.
+
+Sensitive information should not be unnecessarily exposed in logs.
+
+---
+
+# 30. PRIVACY
+
+Treat financial and institutional information as sensitive.
+
+Implement:
+
+- least-privilege access
+- role-based visibility
+- secure document access
+- auditability
+- minimal data exposure
+- safe logging
+
+Do not display sensitive information unnecessarily.
+
+---
+
+# 31. ERROR HANDLING
+
+Every workflow must handle errors gracefully.
+
+Examples:
+
+```text
+Upload failed
+Verification service unavailable
+Database error
+Session expired
+Unauthorized action
+Invalid document
+Invalid date
+Duplicate FDR
+Missing required field
+```
+
+Show user-friendly messages.
+
+Do not expose stack traces, SQL errors or internal system details to users.
+
+---
+
+# 32. VALIDATION
+
+Implement both:
+
+### Frontend validation
+
+for good UX.
+
+and
+
+### Backend validation
+
+for security and correctness.
+
+Validate:
+
+- required fields
+- date relationships
+- amount
+- FDR number
+- institution
+- documents
+- duplicate records
+- status transitions
+
+For example:
+
+Maturity date cannot be earlier than issue date.
+
+---
+
+# 33. UX REQUIREMENTS
+
+The UI should always tell the user:
+
+- what is happening
+- what needs action
+- why an action failed
+- what happens next
+
+Use:
+
+- confirmation dialogs for destructive actions
+- loading states
+- skeletons where appropriate
+- toast notifications
+- inline validation
+- empty states
+- success messages
+- error messages
+
+Avoid unnecessary popup overload.
+
+---
+
+# 34. TABLE UX
+
+For large FDR datasets, implement:
+
+- pagination
+- sorting
+- filtering
+- search
+- column visibility where useful
+- status badges
+- row actions
+- bulk actions where appropriate
+
+Example table:
+
+```text
+FDR No. | Institution | Bank | Amount | Maturity | Status | Verification | Action
+```
+
+---
+
+# 35. DEMO DATA
+
+Seed realistic fictional data.
+
+Create:
+
+- at least 15 institutions
+- at least 30 FDRs
+- different banks
+- different statuses
+- upcoming maturities
+- expired FDRs
+- renewed FDRs
+- discrepancies
+- pending verification
+- release requests
+- notifications
+- audit logs
+
+Do NOT use real people's personal or financial information.
+
+Use clearly fictional/demo data.
+
+---
+
+# 36. DEMO USERS
+
+Create demo accounts such as:
+
+```text
+Admin
+AICTE Officer
+Approving Authority
+Institution User
+Auditor
+```
+
+Clearly document the credentials in the development README.
+
+Do not hard-code real production credentials.
+
+---
+
+# 37. API ARCHITECTURE
+
+Build clean REST or equivalent APIs.
+
+Example endpoints:
+
+```text
+/auth/login
+/auth/logout
+
+/institutions
+/institutions/:id
+
+/fdrs
+/fdrs/:id
+/fdrs/:id/documents
+/fdrs/:id/verify
+/fdrs/:id/discrepancies
+/fdrs/:id/history
+
+/renewals
+/renewals/:id
+
+/release-requests
+/release-requests/:id
+
+/notifications
+
+/reports
+
+/audit-logs
+
+/users
+/roles
+/settings
+```
+
+Use proper HTTP methods and authorization.
+
+---
+
+# 38. BACKEND JOBS / AUTOMATION
+
+Implement a scheduled process that checks:
+
+- upcoming maturity
+- overdue FDRs
+- pending verification
+- unresolved discrepancies
+- renewal deadlines
+
+Generate notifications automatically.
+
+For local/demo environments, provide a way to trigger the scheduler manually for testing.
+
+---
+
+# 39. ACCESSIBILITY
+
+Follow good accessibility practices:
+
+- semantic HTML
+- keyboard navigation
+- proper labels
+- sufficient contrast
+- accessible buttons
+- focus states
+- meaningful error messages
+- screen-reader-friendly forms
+
+Do not rely only on color to communicate status.
+
+For example:
+
+Instead of only red:
+
+```text
+🔴 Expired
+```
+
+---
+
+# 40. FRONTEND COMPONENTS
+
+Create reusable components for:
+
+- Navbar
+- Sidebar
+- Cards
+- Tables
+- Status badges
+- Forms
+- Modal
+- Drawer
+- Date picker
+- File uploader
+- Timeline
+- Notifications
+- Charts
+- Confirmation dialogs
+- Empty states
+- Error states
+
+Maintain consistent styling.
+
+---
+
+# 41. FDR DETAILS PAGE
+
+This should be one of the most complete pages.
+
+Include tabs:
+
+### Overview
+
+FDR information.
+
+### Documents
+
+All documents and versions.
+
+### Verification
+
+Submitted vs verified data.
+
+### Discrepancies
+
+Open/resolved discrepancies.
+
+### Renewal History
+
+Old and new FDR relationships.
+
+### Release/Refund
+
+Related requests.
+
+### Timeline
+
+Complete lifecycle.
+
+### Audit
+
+Relevant audit events.
+
+---
+
+# 42. IMPORTANT BUSINESS RULES
+
+Implement business rules such as:
+
+1. Institution can only manage its own records.
+2. Institution cannot approve its own FDR.
+3. Verified status can only be assigned by authorized users.
+4. Rejection should require a reason.
+5. Important modifications must create audit events.
+6. Matured FDRs should not remain silently marked active.
+7. Renewal must maintain a relationship with the previous FDR.
+8. Released FDRs cannot be casually edited back to active.
+9. Documents must be access-controlled.
+10. Unauthorized users cannot access another institution's FDR documents.
+11. Invalid lifecycle transitions must be blocked.
+12. Important actions should require confirmation.
+
+---
+
+# 43. NOTIFICATION EXAMPLES
+
+Use professional wording.
+
+Example:
+
+**Upcoming Maturity**
+
+> FDR FDR-2026-001245 for ABC Engineering College will mature in 30 days. Renewal or replacement action may be required.
+
+**Verification**
+
+> A new FDR submission from ABC Engineering College is awaiting verification.
+
+**Discrepancy**
+
+> A discrepancy has been identified in FDR FDR-2026-001245. Please review the verification details.
+
+**Approval**
+
+> Release request RR-2026-00042 is awaiting approval.
+
+---
+
+# 44. FORMAL LANGUAGE
+
+Use formal government/enterprise wording throughout.
+
+Prefer:
+
+> "Submit for Verification"
+
+instead of:
+
+> "Check Now!"
+
+Prefer:
+
+> "Verification Required"
+
+instead of:
+
+> "Oops!"
+
+Prefer:
+
+> "Request Correction"
+
+instead of:
+
+> "Fix It"
+
+The product should feel suitable for an official regulatory organization.
+
+---
+
+# 45. SECURITY DASHBOARD
+
+Include an administrative security/audit overview showing:
+
+- Failed login attempts
+- Recent privileged actions
+- Suspicious access attempts
+- Recent permission changes
+- Document access events
+- Active sessions where appropriate
+
+This is supplementary and should not distract from the core FDR workflow.
+
+---
+
+# 46. PERFORMANCE
+
+The application should be designed for large datasets.
+
+Avoid loading thousands of FDRs into the browser at once.
+
+Use:
+
+- server-side pagination
+- indexed queries
+- efficient API responses
+- lazy loading
+- optimized document handling
+
+Dashboard statistics should be calculated efficiently.
+
+---
+
+# 47. NO FAKE FUNCTIONALITY
+
+This is extremely important.
+
+Do NOT implement:
+
+```text
+Button → nothing
+```
+
+or:
+
+```text
+Export → "Coming Soon"
+```
+
+or:
+
+```text
+Verify → simply changes text on frontend
+```
+
+Every demonstrated feature should actually work.
+
+If an external integration cannot be implemented because the real service is unavailable, create a clearly labeled mock/service abstraction that behaves realistically and is replaceable by the actual authorized integration later.
+
+---
+
+# 48. TESTING
+
+Include tests for critical functionality.
+
+At minimum test:
+
+### Authentication
+
+- valid login
+- invalid login
+- unauthorized route
+
+### FDR
+
+- create
+- update
+- duplicate detection
+- validation
+- status transition
+
+### Documents
+
+- valid upload
+- invalid file
+- unauthorized access
+
+### Verification
+
+- match
+- mismatch
+- correction request
+
+### Maturity
+
+- upcoming
+- matured
+- overdue
+
+### Renewal
+
+- submit renewal
+- approve renewal
+- replacement relationship
+
+### Release
+
+- submit
+- review
+- approve
+- reject
+
+### Authorization
+
+Verify that users cannot perform actions outside their role.
+
+---
+
+# 49. SECURITY TESTING
+
+Before considering the product complete, perform a security-oriented review for:
+
+- Broken access control
+- IDOR
+- XSS
+- SQL injection
+- CSRF
+- insecure file upload
+- path traversal
+- authentication weaknesses
+- privilege escalation
+- sensitive information leakage
+- insecure API endpoints
+
+Fix discovered issues.
+
+Do not simply document vulnerabilities—implement reasonable protections.
+
+---
+
+# 50. SEED DATA SHOULD DEMONSTRATE THE WHOLE PRODUCT
+
+When the application starts, the dashboard should already demonstrate:
+
+```text
+Active FDRs
+Expiring FDRs
+Expired FDRs
+Pending verification
+Discrepancies
+Renewals
+Release requests
+Notifications
+Audit history
+```
+
+This makes the product immediately demonstrable during SIH judging.
+
+---
+
+# 51. FINAL DEMO FLOW
+
+The completed application must allow a judge to perform this complete demonstration:
+
+## Scenario 1 — Institution submits FDR
+
+Login as Institution.
+
+→ Open FDR Submission
+
+→ Enter details
+
+→ Upload FDR
+
+→ Review
+
+→ Submit
+
+Expected:
+
+**PENDING VERIFICATION**
+
+---
+
+## Scenario 2 — AICTE verifies FDR
+
+Login as AICTE Officer.
+
+→ Open Pending Verification
+
+→ Select FDR
+
+→ Review document
+
+→ Compare submitted/verified data
+
+→ Verify
+
+Expected:
+
+**VERIFIED / ACTIVE**
+
+---
+
+## Scenario 3 — Discrepancy
+
+Submit another FDR with intentionally mismatching information.
+
+System identifies:
+
+**AMOUNT MISMATCH**
+
+Officer reviews it.
+
+→ Request Correction
+
+Institution receives notification.
+
+---
+
+## Scenario 4 — Expiry
+
+Use demo FDR approaching maturity.
+
+Dashboard displays:
+
+**Expiring Soon**
+
+System generates notification.
+
+---
+
+## Scenario 5 — Renewal
+
+Institution submits replacement FDR.
+
+Officer verifies it.
+
+Old FDR:
+
+**REPLACED**
+
+New FDR:
+
+**ACTIVE**
+
+Renewal history shows the relationship.
+
+---
+
+## Scenario 6 — Release
+
+Institution submits release/refund request.
+
+Officer reviews it.
+
+Approving Authority approves it.
+
+Final status:
+
+**RELEASED**
+
+---
+
+## Scenario 7 — Audit
+
+Open audit trail.
+
+Show every important action performed throughout the above workflows.
+
+---
+
+# 52. REPORTING DEMO
+
+Allow the judge to generate:
+
+- Expiring FDR report
+- Pending verification report
+- Discrepancy report
+- Renewal report
+- Release report
+
+Export at least CSV.
+
+Where supported, provide PDF export.
+
+---
+
+# 53. TECHNOLOGY
+
+Choose a modern, stable full-stack architecture.
+
+Preferred example:
+
+### Frontend
+
+React + TypeScript
+
+with a professional component library/design system.
+
+### Backend
+
+Node.js + TypeScript
+
+using a clean REST API architecture.
+
+### Database
+
+PostgreSQL
+
+### ORM
+
+Prisma or another reliable ORM.
+
+### Authentication
+
+Secure session/JWT architecture with proper server-side authorization.
+
+### File storage
+
+Local development storage abstraction that can later be replaced with secure object storage.
+
+### Charts
+
+A reliable charting library.
+
+Use Docker where useful for reproducible local development.
+
+If you choose a different stack, maintain the same architecture, security and functionality requirements.
+
+---
+
+# 54. CODE QUALITY
+
+Write maintainable production-style code.
+
+Use:
+
+- TypeScript types
+- reusable components
+- service layers
+- validation schemas
+- centralized error handling
+- environment configuration
+- clean database models
+- meaningful naming
+- comments only where useful
+- no unnecessary duplicated code
+
+Do not put secrets in source code.
+
+Use environment variables.
+
+Provide:
+
+`.env.example`
+
+---
+
+# 55. PROJECT DOCUMENTATION
+
+Include a README containing:
+
+- Project overview
+- Architecture
+- Technology stack
+- Installation instructions
+- Environment variables
+- Database setup
+- Migration commands
+- Seed commands
+- Demo credentials
+- How to run frontend
+- How to run backend
+- How to run tests
+- API overview
+- Security considerations
+- Mock bank verification explanation
+- Deployment instructions
+
+---
+
+# 56. FINAL QUALITY CHECK
+
+Before declaring the product complete, verify:
+
+### Functional
+
+☐ Login works  
+☐ Logout works  
+☐ RBAC works  
+☐ Institution creation/view works  
+☐ FDR submission works  
+☐ Document upload works  
+☐ Verification works  
+☐ Discrepancy detection works  
+☐ Notifications work  
+☐ Maturity monitoring works  
+☐ Renewal works  
+☐ Replacement history works  
+☐ Release/refund works  
+☐ Dashboard works  
+☐ Search works  
+☐ Filtering works  
+☐ Reports work  
+☐ Audit trail works  
+☐ Admin settings work  
+
+### Security
+
+☐ Backend authorization  
+☐ Secure password hashing  
+☐ Input validation  
+☐ SQL injection protection  
+☐ XSS protection  
+☐ CSRF protection where applicable  
+☐ File upload validation  
+☐ Access-controlled documents  
+☐ Rate limiting  
+☐ Secure error handling  
+☐ Audit logging  
+☐ No secrets in frontend  
+
+### UX
+
+☐ Formal government-style design  
+☐ Consistent typography  
+☐ Professional colors  
+☐ Responsive layout  
+☐ Accessible forms  
+☐ Loading states  
+☐ Error states  
+☐ Empty states  
+☐ Confirmation dialogs  
+☐ Clear status indicators  
+
+---
+
+# 57. MOST IMPORTANT FINAL REQUIREMENT
+
+The final result must feel like a **complete working AICTE enterprise portal**, not a college-project mockup.
+
+The judge should be able to:
+
+```text
+LOGIN
+ ↓
+VIEW DASHBOARD
+ ↓
+SELECT INSTITUTION
+ ↓
+SUBMIT/VIEW FDR
+ ↓
+UPLOAD DOCUMENT
+ ↓
+VERIFY FDR
+ ↓
+DETECT DISCREPANCY
+ ↓
+RESOLVE DISCREPANCY
+ ↓
+MONITOR MATURITY
+ ↓
+RENEW FDR
+ ↓
+VIEW RENEWAL HISTORY
+ ↓
+SUBMIT RELEASE REQUEST
+ ↓
+APPROVE RELEASE
+ ↓
+VIEW AUDIT TRAIL
+ ↓
+GENERATE REPORT
+```
+
+Everything in this flow must be functional and persisted in the database.
+
+---
+
+# 58. SIH ALIGNMENT
+
+Ensure the final implementation directly addresses all major requirements of PS 26265:
+
+1. Centralized Security Deposit/FDR Repository
+2. Digital Document Management
+3. Verification and Discrepancy Detection
+4. Automated Validity and Maturity Tracking
+5. Renewal and Replacement Monitoring
+6. Release and Refund Workflow
+7. Automated Alerts and Escalation
+8. Dashboard and Management Reports
+9. Audit Trail and Role-Based Access Control
+10. System Integration Architecture
+11. Data Security
+12. Complete lifecycle tracking
+13. Reduction of manual administrative work
+14. Improved record accuracy
+15. Improved verification turnaround
+16. Better visibility into pending cases
+
+---
+
+# FINAL PRODUCT DEFINITION
+
+The completed product is:
+
+**"AICTE Security Deposit & FDR Lifecycle Management Portal"**
+
+A secure centralized platform for authorized institutions and AICTE officials to manage the complete lifecycle of Security Deposits and FDRs—from digital submission and document storage through verification, discrepancy resolution, maturity monitoring, renewal/replacement, release/refund and final audit—with role-based access, automated alerts, reporting and secure document management.
+
+Build the application completely.
+
+Do not stop at UI generation.
+
+Implement the frontend, backend, database, authentication, authorization, workflows, APIs, validation, notifications, file management, audit logging, reports, demo data and security controls.
+
+Make the final application polished, responsive, professional, secure and fully demonstrable from end to end.
+
+
+
+
+
+After completing making the website ready push that code into this repo
+https://github.com/root-chinmay/SIH_2026_NEW.git

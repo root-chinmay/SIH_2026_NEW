@@ -1,0 +1,1290 @@
+# MASTER PROMPT — AICTE FDR / SIH SECURITY HARDENING
+
+You are a senior application security architect, full-stack engineer, penetration-testing specialist, and secure financial-system designer.
+
+I have an existing SIH prototype related to the **AICTE FDR (Fund/Financial Disbursement/Management) system**. The prototype contains financial/money-related workflows, user accounts, dashboards, forms, APIs, and potentially sensitive institutional and financial information.
+
+Your task is to **security-harden the ENTIRE existing website/application** without breaking its existing functionality or unnecessarily changing its UI/UX.
+
+Do NOT treat this as a simple frontend security task. Analyze and secure the complete application architecture.
+
+---
+
+## 1. PRIMARY OBJECTIVE
+
+Transform the current prototype into a **secure, production-oriented SIH prototype** suitable for demonstrating a security-conscious financial/institutional platform.
+
+The final application must demonstrate:
+
+- Strong authentication
+- Strong authorization
+- Role-based access control
+- Secure financial transaction handling
+- Input validation
+- Secure API communication
+- Protection against common web attacks
+- Secure session management
+- Data protection
+- Audit logging
+- Fraud/abuse detection
+- Rate limiting
+- Secure error handling
+- Protection of sensitive information
+- Secure file handling
+- Security monitoring
+- Defensive programming
+- Secure frontend and backend architecture
+
+Do NOT add fake security features that have no actual implementation behind them.
+
+Every security control displayed in the UI should correspond to an actual implemented mechanism wherever technically possible.
+
+---
+
+# 2. FIRST ANALYZE THE EXISTING PROJECT
+
+Before modifying anything:
+
+1. Inspect the complete project structure.
+2. Identify the frontend framework.
+3. Identify the backend framework.
+4. Identify database usage.
+5. Identify API endpoints.
+6. Identify authentication mechanisms.
+7. Identify user roles.
+8. Identify financial transaction workflows.
+9. Identify sensitive data.
+10. Identify file upload/download functionality.
+11. Identify third-party integrations.
+12. Identify environment variables and secrets.
+13. Identify insecure hardcoded credentials or API keys.
+14. Identify client-side-only security checks.
+15. Identify missing server-side validation.
+16. Identify insecure database queries.
+17. Identify authorization weaknesses.
+18. Identify areas vulnerable to common OWASP attacks.
+
+Create a security assessment internally before making changes.
+
+Do not remove existing functionality simply because it is easier than securing it.
+
+---
+
+# 3. AUTHENTICATION SECURITY
+
+Implement strong authentication.
+
+Requirements:
+
+- Secure login
+- Secure logout
+- Password hashing using Argon2id or bcrypt
+- Never store plaintext passwords
+- Password strength validation
+- Protection against brute-force attacks
+- Login rate limiting
+- Account lockout or progressive delay after repeated failed attempts
+- Secure session handling
+- Session expiration
+- Idle timeout
+- Secure cookie configuration
+- HttpOnly cookies where applicable
+- Secure cookies in HTTPS environments
+- SameSite protection
+- Session invalidation after logout
+- Session invalidation after sensitive security events
+- Do not expose authentication tokens in URLs
+- Never store sensitive authentication secrets in localStorage unless there is a strong architectural reason
+
+If the architecture supports it, implement:
+
+- MFA/2FA
+- OTP verification
+- Security notifications
+- Login activity history
+
+Do not expose OTPs, passwords, tokens, or private credentials in logs.
+
+---
+
+# 4. ROLE-BASED ACCESS CONTROL
+
+Implement proper RBAC.
+
+Possible roles may include:
+
+- Student/User
+- Institution
+- Faculty/Officer
+- Finance Officer
+- Department/Admin
+- AICTE/Admin
+- Super Admin
+- Auditor
+
+Adapt the roles to the actual application.
+
+IMPORTANT:
+
+Never rely only on frontend route protection.
+
+Every sensitive operation must be authorized on the server/backend.
+
+Examples:
+
+A normal user must NOT be able to:
+
+- Access another user's financial information
+- Modify another user's application
+- Approve their own financial request
+- Modify administrative records
+- Change transaction status
+- Access admin APIs
+- Download unauthorized documents
+- Modify payment information
+
+Use a **deny-by-default authorization model**.
+
+---
+
+# 5. FINANCIAL / MONEY SECURITY
+
+Because this application handles financial information, treat all monetary operations as high-risk operations.
+
+Implement:
+
+- Server-side transaction validation
+- Server-side amount validation
+- Currency validation
+- Decimal-safe money calculations
+- Protection against negative amounts
+- Protection against extremely large amounts
+- Transaction state validation
+- Duplicate transaction prevention
+- Idempotency for payment/financial APIs
+- Transaction reference IDs
+- Unique transaction identifiers
+- Atomic database transactions
+- Concurrency protection
+- Double-spending prevention
+- Transaction authorization
+- Transaction audit trails
+- Approval workflow
+- Maker-checker / four-eyes principle where applicable
+
+Never trust:
+
+- Amount received from frontend
+- User ID received from frontend
+- Role received from frontend
+- Transaction status received from frontend
+- Account balance received from frontend
+
+All critical values must be calculated or verified server-side.
+
+For example:
+
+NEVER:
+
+frontend → amount = ₹100000 → backend blindly processes it
+
+Instead:
+
+frontend → request → backend validates user + authorization + limits + current state → database transaction → audit log → response
+
+---
+
+# 6. TRANSACTION STATE MACHINE
+
+Implement strict transaction states where applicable.
+
+Example:
+
+PENDING
+↓
+UNDER_REVIEW
+↓
+APPROVED
+↓
+PROCESSING
+↓
+COMPLETED
+
+Alternative states:
+
+REJECTED
+CANCELLED
+FAILED
+REVERSED
+
+Prevent illegal transitions.
+
+For example:
+
+COMPLETED → PENDING
+
+should NOT be possible through a normal API request.
+
+Every state transition must be authorized and logged.
+
+---
+
+# 7. DOUBLE-SUBMISSION PROTECTION
+
+Prevent users from accidentally or maliciously submitting the same financial request multiple times.
+
+Implement:
+
+- Idempotency keys
+- Unique transaction IDs
+- Duplicate detection
+- Request deduplication
+- Disabled submit buttons during processing
+- Backend duplicate protection
+
+Frontend protection alone is NOT sufficient.
+
+---
+
+# 8. INPUT VALIDATION
+
+Validate every user-controlled input.
+
+Implement validation for:
+
+- Names
+- Email addresses
+- Phone numbers
+- IDs
+- Amounts
+- Dates
+- File names
+- Descriptions
+- Addresses
+- Transaction references
+- Search parameters
+- Query parameters
+- JSON request bodies
+
+Use:
+
+- Allowlist validation
+- Type validation
+- Length limits
+- Range limits
+- Format validation
+- Server-side validation
+
+Never trust frontend validation.
+
+---
+
+# 9. SQL INJECTION PROTECTION
+
+If a relational database is used:
+
+- Use parameterized queries
+- Use prepared statements
+- Use ORM safely
+- Never concatenate user input into SQL
+- Validate database identifiers where applicable
+
+Example of prohibited logic:
+
+"SELECT * FROM users WHERE id = " + userInput
+
+Use parameterized queries instead.
+
+---
+
+# 10. NOSQL INJECTION PROTECTION
+
+If MongoDB or another NoSQL database is used:
+
+- Validate object types
+- Prevent operator injection
+- Reject unexpected nested operators
+- Do not directly pass request bodies into database queries
+- Use strict schemas
+
+---
+
+# 11. XSS PROTECTION
+
+Protect against:
+
+- Stored XSS
+- Reflected XSS
+- DOM-based XSS
+
+Implement:
+
+- Output encoding
+- Safe rendering
+- Sanitization where HTML is intentionally allowed
+- Content Security Policy
+- Secure framework defaults
+- Avoid unsafe HTML rendering
+
+Do not blindly render user-controlled HTML.
+
+---
+
+# 12. CSRF PROTECTION
+
+For cookie-based authentication:
+
+Implement appropriate CSRF protection.
+
+Use:
+
+- SameSite cookies
+- CSRF tokens where necessary
+- Origin/Referer validation where appropriate
+- Secure request validation
+
+Ensure state-changing requests cannot be triggered by malicious external websites.
+
+---
+
+# 13. API SECURITY
+
+Secure every API endpoint.
+
+For each endpoint verify:
+
+1. Authentication
+2. Authorization
+3. Input validation
+4. Rate limiting
+5. Resource ownership
+6. Business rules
+7. Error handling
+8. Audit logging where appropriate
+
+Never create APIs that trust:
+
+userId
+role
+accountId
+transactionId
+
+simply because they came from the frontend.
+
+Verify ownership and permissions on the server.
+
+---
+
+# 14. IDOR / BROKEN ACCESS CONTROL
+
+Explicitly protect against:
+
+- IDOR
+- BOLA
+- Broken access control
+- Privilege escalation
+
+Example:
+
+/api/transactions/123
+
+must NOT automatically allow any logged-in user to access transaction 123.
+
+Verify that the requesting user is authorized to access that transaction.
+
+---
+
+# 15. RATE LIMITING
+
+Implement rate limits for sensitive endpoints.
+
+Especially:
+
+- Login
+- OTP requests
+- Password reset
+- Registration
+- Financial transaction creation
+- Approval actions
+- File uploads
+- API endpoints
+- Search endpoints
+
+Use stricter limits for authentication and financial operations.
+
+Return appropriate HTTP status codes such as:
+
+429 Too Many Requests
+
+Do not reveal unnecessary information about whether an account exists.
+
+---
+
+# 16. SECURITY HEADERS
+
+Configure appropriate HTTP security headers.
+
+Where applicable implement:
+
+- Content-Security-Policy
+- X-Content-Type-Options
+- Strict-Transport-Security
+- Referrer-Policy
+- Permissions-Policy
+- Frame protection through CSP/frame-ancestors or appropriate mechanisms
+
+Avoid deprecated or ineffective headers unless required for compatibility.
+
+---
+
+# 17. HTTPS / TRANSPORT SECURITY
+
+Assume production deployment uses HTTPS.
+
+Ensure:
+
+- No sensitive data transmitted over HTTP
+- Secure cookies
+- HSTS in production
+- No mixed content
+- API requests use HTTPS
+- Sensitive tokens are not exposed through URLs
+
+For local development, clearly distinguish development configuration from production configuration.
+
+---
+
+# 18. SECRETS MANAGEMENT
+
+Search the entire codebase for:
+
+- API keys
+- Passwords
+- JWT secrets
+- Database passwords
+- Private keys
+- Cloud credentials
+- Encryption keys
+- Access tokens
+
+Never hardcode secrets.
+
+Move secrets to environment variables or an appropriate secret-management mechanism.
+
+Create/update:
+
+.env.example
+
+without exposing real secrets.
+
+Never place real credentials in frontend JavaScript.
+
+---
+
+# 19. DATABASE SECURITY
+
+Implement:
+
+- Least-privilege database access
+- Schema validation
+- Foreign-key constraints where appropriate
+- Unique constraints
+- Transactional operations
+- Proper indexes
+- Audit fields
+- Created/updated timestamps
+- Soft deletion where appropriate
+- Protection against unauthorized modification
+
+Sensitive database operations should use transactions.
+
+---
+
+# 20. SENSITIVE DATA PROTECTION
+
+Identify sensitive information such as:
+
+- Financial information
+- Personal information
+- Identity information
+- Bank/payment details
+- Contact information
+- Authentication information
+- Institutional information
+
+Do not unnecessarily expose sensitive fields to the frontend.
+
+Return only the fields required by the current screen.
+
+Implement data minimization.
+
+Mask sensitive values in UI where appropriate.
+
+Example:
+
+Account number:
+
+XXXX XXXX 1234
+
+rather than displaying the complete value.
+
+---
+
+# 21. ENCRYPTION
+
+Use encryption appropriately.
+
+Use:
+
+- TLS for data in transit
+- Strong encryption for sensitive data at rest when required
+- Modern cryptographic algorithms
+- Proper key management
+
+Do NOT implement custom cryptographic algorithms.
+
+Do NOT use MD5 or SHA-1 for password storage.
+
+Passwords must be hashed using a password hashing algorithm such as Argon2id or bcrypt.
+
+---
+
+# 22. FILE UPLOAD SECURITY
+
+If the application supports file uploads:
+
+Implement:
+
+- File size limits
+- File type validation
+- MIME validation
+- Extension validation
+- Filename sanitization
+- Randomized server-side filenames
+- Storage outside executable directories
+- Malware scanning architecture where applicable
+- Authorization checks for downloads
+- Download rate limiting where appropriate
+
+Never trust the file extension alone.
+
+Prevent:
+
+- Path traversal
+- Malicious executable uploads
+- Double extensions
+- Unauthorized file access
+
+---
+
+# 23. PATH TRAVERSAL
+
+Protect all file paths against:
+
+../
+..\\
+
+and other path manipulation techniques.
+
+Never directly concatenate user input into filesystem paths.
+
+---
+
+# 24. SSRF PROTECTION
+
+If the application fetches URLs supplied by users:
+
+Protect against SSRF.
+
+Block access to:
+
+- localhost
+- private IP ranges
+- internal services
+- cloud metadata endpoints
+- loopback interfaces
+- internal network resources
+
+Use URL allowlists whenever possible.
+
+---
+
+# 25. COMMAND / CODE INJECTION
+
+Never directly execute user-controlled input through:
+
+- shell commands
+- eval
+- dynamic code execution
+- operating-system commands
+
+If command execution is unavoidable:
+
+- Use strict allowlists
+- Avoid shell interpretation
+- Validate arguments
+- Run with least privilege
+
+---
+
+# 26. BUSINESS LOGIC SECURITY
+
+Do not focus only on OWASP vulnerabilities.
+
+Check business logic.
+
+Examples:
+
+A user should not be able to:
+
+- Approve their own request
+- Withdraw more money than allowed
+- Submit unlimited applications
+- Modify an approved transaction
+- Change transaction amount after approval
+- Bypass required verification
+- Skip mandatory approval levels
+- Reuse an expired approval
+- Replay an old transaction request
+
+Implement server-side business-rule validation.
+
+---
+
+# 27. AUDIT LOGGING
+
+Implement a secure audit trail.
+
+Log important security/business events such as:
+
+- Login
+- Failed login
+- Logout
+- Password change
+- Role change
+- Permission change
+- Financial request creation
+- Financial request modification
+- Approval
+- Rejection
+- Transaction completion
+- Transaction failure
+- Sensitive data access
+- File access
+- Security violations
+
+Each audit event should contain appropriate metadata such as:
+
+- Event ID
+- Timestamp
+- User ID
+- Action
+- Resource
+- Result
+- Request ID
+- Relevant transaction ID
+- IP address where appropriate
+
+Do NOT log:
+
+- Passwords
+- OTPs
+- Authentication tokens
+- Private keys
+- Full payment credentials
+- Sensitive secrets
+
+Audit logs should be tamper-resistant as far as practical.
+
+---
+
+# 28. SECURITY MONITORING DASHBOARD
+
+Add a security section to the admin dashboard.
+
+Display useful security indicators such as:
+
+- Failed login attempts
+- Successful logins
+- Active sessions
+- Suspicious activities
+- Blocked requests
+- Rate-limit violations
+- Recent security events
+- Recent transaction anomalies
+- Account lockouts
+- Critical alerts
+
+Use realistic demo data only where backend security telemetry is unavailable.
+
+Clearly distinguish demo/mock data from real security events.
+
+---
+
+# 29. FRAUD / ANOMALY DETECTION
+
+Because this is a financial system, design a basic risk-detection layer.
+
+Flag suspicious patterns such as:
+
+- Multiple transactions within a short period
+- Unusual transaction amount
+- Repeated failed operations
+- Multiple accounts from the same suspicious source
+- Rapid account changes
+- Repeated transaction attempts
+- Unusual access patterns
+
+Create a simple risk score:
+
+LOW
+MEDIUM
+HIGH
+CRITICAL
+
+Do NOT claim that a basic rules engine is an AI fraud detector unless an actual ML model is implemented.
+
+---
+
+# 30. TRANSACTION RISK SCORING
+
+For demonstration purposes, implement a transparent rule-based risk engine if appropriate.
+
+Example:
+
+Risk factors:
+
++ repeated failed login
++ unusually high amount
++ rapid repeated transaction
++ unusual account behavior
++ suspicious request frequency
+
+Calculate a risk score and display:
+
+Risk Score: 82/100
+Risk Level: HIGH
+Reason: Multiple high-risk indicators detected
+
+Make the scoring explainable.
+
+---
+
+# 31. ERROR HANDLING
+
+Never expose internal errors to users.
+
+Do NOT show:
+
+- Stack traces
+- Database errors
+- File paths
+- Secret values
+- Internal service information
+- SQL queries
+
+Use safe messages such as:
+
+"Something went wrong. Please try again."
+
+Log technical details securely on the server.
+
+---
+
+# 32. SECURITY STATUS UI
+
+Add a professional security status section.
+
+Example:
+
+Security Status
+----------------
+Authentication       ✓ Protected
+Authorization        ✓ RBAC Enabled
+API Security         ✓ Protected
+Transaction Security ✓ Protected
+Data Encryption      ✓ Enabled
+Audit Logging        ✓ Enabled
+Rate Limiting        ✓ Enabled
+Fraud Monitoring     ✓ Active
+
+Only display "Enabled/Protected" when the corresponding feature actually exists.
+
+---
+
+# 33. ADMIN SECURITY CONTROLS
+
+Admin users should have access to:
+
+- User management
+- Role management
+- Permission management
+- Account lock/unlock
+- Audit logs
+- Security alerts
+- Transaction review
+- Suspicious activity
+- Session management
+- Security configuration
+
+Sensitive admin actions should require additional authorization where appropriate.
+
+---
+
+# 34. PRIVILEGE ESCALATION PROTECTION
+
+Prevent users from modifying:
+
+- Their own role
+- Their own permissions
+- Their own approval level
+- Another user's permissions
+- Administrative configuration
+
+unless explicitly authorized.
+
+Never trust role values supplied by the frontend.
+
+---
+
+# 35. SESSION MANAGEMENT
+
+Provide:
+
+- Active sessions
+- Session expiration
+- Logout from current device
+- Logout from all devices
+- Session revocation
+- Security event when sessions are revoked
+
+Do not expose session tokens in the UI.
+
+---
+
+# 36. FRONTEND SECURITY
+
+Review:
+
+- React/Vue/Angular components
+- Routes
+- Forms
+- API calls
+- Local storage
+- Cookies
+- State management
+- Error messages
+- URL parameters
+- Dynamic HTML rendering
+
+Never consider frontend validation a security boundary.
+
+---
+
+# 37. BACKEND SECURITY
+
+Review every backend route.
+
+For each route implement:
+
+Authentication → Authorization → Validation → Business Logic → Database Operation → Audit → Response
+
+Do not allow database operations to occur before authorization checks.
+
+---
+
+# 38. DEPENDENCY SECURITY
+
+Review dependencies.
+
+Identify:
+
+- Outdated packages
+- Known vulnerable packages
+- Unnecessary dependencies
+- Packages with excessive permissions
+
+Recommend secure upgrades where compatible.
+
+Do not blindly upgrade everything if it could break the application.
+
+---
+
+# 39. SECURITY TESTING
+
+After implementation, perform a security-oriented code review.
+
+Check for:
+
+- SQL injection
+- NoSQL injection
+- XSS
+- CSRF
+- IDOR/BOLA
+- Broken access control
+- Authentication bypass
+- Privilege escalation
+- Session vulnerabilities
+- Rate-limit bypass
+- Path traversal
+- File upload vulnerabilities
+- SSRF
+- Command injection
+- Sensitive data exposure
+- Business logic flaws
+- Race conditions
+- Duplicate transaction processing
+
+For every discovered issue:
+
+1. Explain the vulnerability.
+2. Explain why it matters.
+3. Fix it.
+4. Verify the fix.
+5. Do not introduce a workaround that merely hides the vulnerability.
+
+---
+
+# 40. SECURITY TEST USERS
+
+Create safe demo users if the prototype requires them.
+
+Example:
+
+ADMIN
+FINANCE_OFFICER
+AUDITOR
+INSTITUTION
+STUDENT/USER
+
+Use clearly fake credentials.
+
+Never use real passwords, API keys, bank accounts, or financial information.
+
+---
+
+# 41. DEMO MODE
+
+Because this is an SIH prototype:
+
+Create a clearly identifiable DEMO/PROTOTYPE mode where necessary.
+
+Demo mode may use:
+
+- Mock financial transactions
+- Mock users
+- Mock security alerts
+- Mock audit events
+
+But do NOT weaken the security architecture.
+
+The UI should clearly indicate when data is simulated.
+
+---
+
+# 42. SECURITY ARCHITECTURE
+
+Use a layered security architecture:
+
+USER
+ ↓
+HTTPS
+ ↓
+SECURITY HEADERS
+ ↓
+RATE LIMITING
+ ↓
+AUTHENTICATION
+ ↓
+AUTHORIZATION / RBAC
+ ↓
+INPUT VALIDATION
+ ↓
+BUSINESS LOGIC VALIDATION
+ ↓
+RISK / FRAUD CHECK
+ ↓
+DATABASE TRANSACTION
+ ↓
+AUDIT LOG
+ ↓
+SECURE RESPONSE
+
+Implement this architecture wherever applicable.
+
+---
+
+# 43. UI/UX REQUIREMENTS
+
+Do NOT destroy the existing UI.
+
+Preserve:
+
+- Existing layout
+- Existing branding
+- Existing navigation
+- Existing colors where appropriate
+- Existing functionality
+
+Improve the security UX with professional components such as:
+
+- Security badges
+- Risk indicators
+- Confirmation dialogs
+- Transaction verification screens
+- Audit history
+- Security alerts
+- Session information
+- Permission indicators
+
+The interface should look like a **real institutional/financial security platform**, not a generic cybersecurity demo.
+
+Use formal typography, clean spacing, accessible contrast, responsive layouts, and professional language.
+
+---
+
+# 44. SECURITY CONFIRMATION FOR CRITICAL ACTIONS
+
+For high-risk operations such as:
+
+- Financial approval
+- Large transaction
+- Role modification
+- Permission modification
+- Account deletion
+- Sensitive configuration changes
+
+require an additional confirmation step.
+
+Where appropriate use:
+
+- Re-authentication
+- OTP/MFA
+- Confirmation dialog
+- Explicit transaction summary
+
+The confirmation must happen server-side for authorization-sensitive operations.
+
+---
+
+# 45. SECURE API RESPONSE
+
+API responses should:
+
+- Return only required information
+- Avoid sensitive fields
+- Use consistent status codes
+- Avoid leaking internal implementation details
+- Use structured error responses
+
+Example:
+
+{
+  "success": false,
+  "error": {
+    "code": "ACCESS_DENIED",
+    "message": "You are not authorized to perform this action."
+  }
+}
+
+Do not return stack traces or database errors.
+
+---
+
+# 46. SECURITY DOCUMENTATION
+
+Create/update a security documentation section explaining:
+
+- Authentication
+- Authorization
+- RBAC
+- Financial security
+- Encryption
+- Audit logging
+- Fraud detection
+- API security
+- Data protection
+- Incident handling
+- Secure development practices
+
+Keep explanations understandable for judges and non-security experts.
+
+---
+
+# 47. SECURITY CHECKLIST
+
+Add a security checklist/dashboard containing:
+
+✓ Authentication
+✓ RBAC
+✓ API authorization
+✓ Input validation
+✓ SQL/NoSQL injection protection
+✓ XSS protection
+✓ CSRF protection
+✓ Rate limiting
+✓ Session security
+✓ Financial transaction protection
+✓ Idempotency
+✓ Audit logging
+✓ Data protection
+✓ File upload security
+✓ Security headers
+✓ Error handling
+✓ Fraud monitoring
+✓ Security alerts
+
+Only mark controls as implemented after actually implementing them.
+
+---
+
+# 48. CRITICAL RULE — DO NOT FAKE SECURITY
+
+Never implement visual-only security.
+
+For example:
+
+DO NOT create:
+
+"Encryption Enabled ✓"
+
+if the application does not actually implement encryption where required.
+
+DO NOT create:
+
+"Admin Protected ✓"
+
+if backend authorization does not exist.
+
+DO NOT create:
+
+"Fraud Detection Active"
+
+if there is no detection mechanism.
+
+Security features must correspond to real implementation.
+
+---
+
+# 49. DO NOT BREAK EXISTING FEATURES
+
+This is extremely important.
+
+Before modifying existing code:
+
+- Understand current functionality.
+- Preserve existing routes.
+- Preserve existing APIs where possible.
+- Preserve database compatibility.
+- Preserve existing UI.
+- Preserve existing workflows.
+
+When security changes require an architectural change, implement the safest compatible approach.
+
+---
+
+# 50. FINAL SECURITY REVIEW
+
+After implementation, perform a final review.
+
+Generate a security report containing:
+
+## Security improvements implemented
+
+List all implemented controls.
+
+## Vulnerabilities fixed
+
+List vulnerabilities discovered and fixed.
+
+## Remaining risks
+
+Clearly identify anything that cannot be fully secured in a prototype environment.
+
+## Production recommendations
+
+Explain what should be added before real deployment.
+
+## Security architecture
+
+Explain the final architecture.
+
+## Attack protection
+
+Show which OWASP-style threats are mitigated.
+
+---
+
+# 51. FINAL OUTPUT REQUIREMENTS
+
+Do not simply explain what should be done.
+
+Actually modify the application/codebase wherever the environment allows it.
+
+For every security feature:
+
+1. Implement it.
+2. Integrate it into the existing workflow.
+3. Test it.
+4. Handle failure cases.
+5. Ensure it does not break existing functionality.
+6. Explain what was changed.
+
+At the end, provide:
+
+### A. Security Architecture
+A concise architecture overview.
+
+### B. Implemented Security Features
+A complete list.
+
+### C. Vulnerabilities Fixed
+A list of vulnerabilities and their fixes.
+
+### D. Files/Modules Modified
+List the relevant files/modules.
+
+### E. Testing Performed
+List security tests performed.
+
+### F. Remaining Risks
+Clearly identify limitations.
+
+### G. Production Readiness
+Give a realistic assessment:
+
+Prototype Ready
+or
+Needs Additional Production Hardening
+
+Do NOT falsely claim that the application is completely secure.
+
+---
+
+# FINAL INSTRUCTION
+
+Treat this application as a **financially sensitive institutional system**.
+
+Security must be implemented using **defense in depth**.
+
+Never trust the client.
+
+Never trust user-supplied roles, IDs, amounts, permissions, or transaction states.
+
+Validate on the server.
+
+Authorize on the server.
+
+Protect financial operations.
+
+Log security-sensitive events.
+
+Minimize sensitive data exposure.
+
+Fail securely.
+
+Preserve existing functionality.
+
+Build security that is **real, testable, explainable, and demonstrable to SIH judges**.
+
+Begin by analyzing the existing application architecture and security weaknesses, then implement the security improvements systematically.
